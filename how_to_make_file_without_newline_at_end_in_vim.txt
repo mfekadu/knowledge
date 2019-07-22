@@ -1,0 +1,1 @@
+https://stackoverflow.com/questions/1050640/vim-disable-automatic-newline-at-end-of-file
