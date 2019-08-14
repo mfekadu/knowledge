@@ -249,8 +249,7 @@ public class BabelNetDemo
 		System.out.println("SYNSETS WITH English word: \""+word+"\"");
 		List<BabelSynset> synsets = bn.getSynsets(word, Language.EN);
 		Collections.sort(synsets, new BabelSynsetComparator(word));
-		for (BabelSynset synset : synsets)
-		{
+		for (BabelSynset synset : synsets) {
 			System.out.print("  =>(" + synset.getID() + 
 							 "; TYPE: " + synset.getType() +
 							 "; WN SYNSET: " + synset.getWordNetOffsets() + ";\n" +

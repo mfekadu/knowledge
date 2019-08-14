@@ -1,28 +1,20 @@
 package hello;
 
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
+import com.babelscape.util.POS;
 import com.babelscape.util.UniversalPOS;
 import com.google.common.collect.Multimap;
 
-import it.uniroma1.lcl.babelnet.BabelNet;
-import it.uniroma1.lcl.babelnet.BabelNetQuery;
-import it.uniroma1.lcl.babelnet.BabelNetUtils;
-import it.uniroma1.lcl.babelnet.BabelSense;
-import it.uniroma1.lcl.babelnet.BabelSenseComparator;
-import it.uniroma1.lcl.babelnet.BabelSynset;
-import it.uniroma1.lcl.babelnet.BabelSynsetComparator;
-import it.uniroma1.lcl.babelnet.BabelSynsetID;
-import it.uniroma1.lcl.babelnet.BabelSynsetRelation;
-import it.uniroma1.lcl.babelnet.InvalidSynsetIDException;
+import it.uniroma1.lcl.babelnet.*;
+import it.uniroma1.lcl.babelnet.data.BabelCategory;
 import it.uniroma1.lcl.babelnet.data.BabelGloss;
 import it.uniroma1.lcl.babelnet.data.BabelImage;
 import it.uniroma1.lcl.babelnet.data.BabelSenseSource;
 import it.uniroma1.lcl.jlt.util.Language;
 import it.uniroma1.lcl.jlt.util.ScoredItem;
+import it.uniroma1.lcl.kb.SynsetType;
 
 
 public class SynsetService {
@@ -48,10 +40,9 @@ public class SynsetService {
         }
     }
 
-
     // package-private function because it doesnt say "private"
     // thus accessible via other classes in "package hello"
-    static void simpleTest() {
+    public static void simpleTest() {
         BabelNet bn = BabelNet.getInstance();
         System.out.println("=== DEMO ===");
         BabelSynset synset = bn.getSynset(new BabelSynsetID("bn:03083790n"));
@@ -60,7 +51,42 @@ public class SynsetService {
     }
 
     public static void main(String[] args) {
-        simpleTest();
-        bankTest();
+        System.out.println("Hello from SynsetService.java!");
+    }
+
+    public List<Synset> findByWord(String word) {
+        BabelNet bn = BabelNet.getInstance();
+        System.out.println("SYNSETS WITH English word: \""+word+"\"");
+        List<BabelSynset> synsets = bn.getSynsets(word, Language.EN);
+        Collections.sort(synsets, new BabelSynsetComparator(word));
+        ArrayList<Synset> mySynsetList = new ArrayList<Synset>();
+
+        for (BabelSynset synset : synsets) {
+            BabelSynsetID synsetID = synset.getID();
+            POS pos = synset.getPOS();
+            List<BabelSenseSource> senseSources = synset.getSenseSources();
+            SynsetType synsetType = synset.getType();
+            List<WordNetSynsetID> synsetWordNetOffsets = synset.getWordNetOffsets();
+            Optional<BabelSense> synsetMainLemma = synset.getMainSense(Language.EN);
+            List<BabelImage> synsetImages = synset.getImages();
+            List<BabelCategory> synsetCategories = synset.getCategories();
+            mySynsetList.add(new Synset(synsetID.toString(),pos.toString(), senseSources.toString()));
+            System.out.print("  =>(" + synsetID +
+                    "; TYPE: " + synsetType +
+                    "; WN SYNSET: " + synsetWordNetOffsets + ";\n" +
+                    "  MAIN LEMMA: " + synsetMainLemma +
+                    ";\n  IMAGES: " + synsetImages +
+                    ";\n  CATEGORIES: " + synsetCategories);
+            System.out.println("}\n  -----");
+        }
+        return mySynsetList;
+    }
+
+    public Synset findById(String s) {
+        BabelNet bn = BabelNet.getInstance();
+        BabelSynset synset = bn.getSynset(new BabelSynsetID(s));
+        return new Synset(synset.getID().toString(),
+                synset.getPOS().toString(),
+                synset.getSenseSources().toString());
     }
 }
