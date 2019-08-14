@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SynsetController {
-    @GetMapping(value = "/sysnet/{id}")
+    @GetMapping(value = "/synset/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Synset findById(@PathVariable( "id" ) String id) {
+        final SynsetService synsetService = new SynsetService();
+        synsetService.simpleTest();
         return new Synset(id, id, id);
     }
 }
