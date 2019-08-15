@@ -59,25 +59,14 @@ public class SynsetService {
         System.out.println("SYNSETS WITH English word: \""+word+"\"");
         List<BabelSynset> synsets = bn.getSynsets(word, Language.EN);
         Collections.sort(synsets, new BabelSynsetComparator(word));
-        ArrayList<Synset> mySynsetList = new ArrayList<Synset>();
+        ArrayList<Synset> mySynsetList = new ArrayList<>();
 
         for (BabelSynset synset : synsets) {
             BabelSynsetID synsetID = synset.getID();
             POS pos = synset.getPOS();
             List<BabelSenseSource> senseSources = synset.getSenseSources();
-            SynsetType synsetType = synset.getType();
-            List<WordNetSynsetID> synsetWordNetOffsets = synset.getWordNetOffsets();
-            Optional<BabelSense> synsetMainLemma = synset.getMainSense(Language.EN);
-            List<BabelImage> synsetImages = synset.getImages();
-            List<BabelCategory> synsetCategories = synset.getCategories();
             mySynsetList.add(new Synset(synsetID.toString(),pos.toString(), senseSources.toString()));
-            System.out.print("  =>(" + synsetID +
-                    "; TYPE: " + synsetType +
-                    "; WN SYNSET: " + synsetWordNetOffsets + ";\n" +
-                    "  MAIN LEMMA: " + synsetMainLemma +
-                    ";\n  IMAGES: " + synsetImages +
-                    ";\n  CATEGORIES: " + synsetCategories);
-            System.out.println("}\n  -----");
+            System.out.println(synset.toString());
         }
         return mySynsetList;
     }

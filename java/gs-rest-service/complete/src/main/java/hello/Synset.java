@@ -2,7 +2,7 @@ package hello;
 
 public class Synset {
     private final String sysnetId;
-    private final String pos;
+    private final String pos; /* part of speech */
     private final String source;
 
     public Synset(String sysnetId, String pos, String source) {
